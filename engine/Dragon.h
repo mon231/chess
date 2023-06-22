@@ -6,5 +6,5 @@ class Dragon : public Piece
 {
 public:
 	Dragon(const char type, const std::string& location);
-	virtual bool is_affordable(const Point& new_location, bool isThereAPlayer) const;
+	virtual bool is_reachable(const Point& new_location, bool isThereAPlayer) const;
 };

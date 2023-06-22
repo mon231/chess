@@ -19,7 +19,8 @@ void copy_string_to_char_array(char* arr, std::string str) {
 int main()
 {
 	Pipe p = Pipe();
-	Game game = Game();
+	Game game = Game(BOARD_FIRST_STATE);
+
 	std::string ans = "";
 	std::string msg_from_graphics = "";
 	char msg_to_graphics[1024] = { 0 }; // msgToGraphics should contain the board string accord the protocol
@@ -40,8 +41,6 @@ int main()
 			return 0;
 		}
 	}
-
-	game.init(BOARD_FIRST_STATE);
 
 	copy_string_to_char_array(msg_to_graphics, game.parse_string()); //msgToGraphics = first_board_as_string + color_of_first_player -> always white
 	p.send_message_to_graphics(msg_to_graphics);   // send the board string

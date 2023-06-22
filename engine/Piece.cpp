@@ -5,21 +5,21 @@ Piece::Piece(const char type, const std::string& location) :
 {}
 
 void Piece::update_location(const std::string& new_location) {
-	this->_place.init_point(new_location);
+	_place.init_point(new_location);
 }
 
 char Piece::get_type() const {
-	return this->_type;
+	return _type;
 }
 
-Players Piece::get_owner() const {
-	if (islower(this->get_type())) {
-		return Players::BLACK_PLAYER;
+Player Piece::get_owner() const {
+	if (islower(get_type())) {
+		return Player::BLACK_PLAYER;
 	} else {
-		return Players::WHITE_PLAYER;
+		return Player::WHITE_PLAYER;
 	}
 }
 
 const Point& Piece::get_point() const {
-	return this->_place;
+	return _place;
 }

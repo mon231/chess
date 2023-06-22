@@ -1,15 +1,62 @@
 #include "Game.h"
 
-Game::Game() :
-	_turn(Players::WHITE_PLAYER), _board(std::vector<Piece*>()), _white_king(nullptr), _black_king(nullptr)
-{}
+Game::Game(const char* board) :
+	_turn(Player::WHITE_PLAYER)
+{
+	size_t y_index = 0;
+	size_t x_index = 0;
+	std::string loc = "##"; //create std::string with place for x and y (2 char length std::string)
 
-Game::~Game() {
-	int i = 0;
+	for (y_index = 0; y_index < BOARD_LENGTH; y_index++) {
+		for (x_index = 0; x_index < BOARD_LENGTH; x_index++) {
+			loc[0] = FIRST_INDEX_VALUE_OF_X + x_index;
+			loc[1] = FIRST_INDEX_VALUE_OF_Y - y_index;
 
-	for (i = this->_board.size() - 1; i >= 0; i--) {
-		delete this->_board[i];
-		this->_board.pop_back();
+			switch (tolower(board[y_index * BOARD_LENGTH + x_index]))
+			{
+			case QUEEN:
+				_board.emplace_back(new Queen(board[y_index * BOARD_LENGTH + x_index], loc));
+				break;
+
+			case KING:
+				_board.emplace_back(new King(board[y_index * BOARD_LENGTH + x_index], loc));
+
+				if (_board[_board.size() - 1]->get_owner() == Player::BLACK_PLAYER)
+				{
+					_black_king = _board[_board.size() - 1].get();
+				}
+				else
+				{
+					_white_king = _board[_board.size() - 1].get();
+				}
+
+				break;
+
+			case PAWN:
+				_board.emplace_back(new Pawn(board[y_index * BOARD_LENGTH + x_index], loc));
+				break;
+
+			case ROOK:
+				_board.emplace_back(new Rook(board[y_index * BOARD_LENGTH + x_index], loc));
+				break;
+
+			case BISHOP:
+				_board.emplace_back(new Bishop(board[y_index * BOARD_LENGTH + x_index], loc));
+				break;
+
+			case KNIGHT:
+				_board.emplace_back(new Knight(board[y_index * BOARD_LENGTH + x_index], loc));
+				break;
+
+			case DRAGON:
+				_board.emplace_back(new Dragon(board[y_index * BOARD_LENGTH + x_index], loc));
+				break;
+
+			case EMPTY_CELL_CHAR:
+				_board.emplace_back();
+				break;
+			}
+		}
 	}
 }
 
@@ -20,148 +67,104 @@ std::string Game::parse_string() const {
 
 	for (i = 0; i < BOARD_LENGTH; i++) {
 		for (j = 0; j < BOARD_LENGTH; j++) {
-			if (this->_board[i * BOARD_LENGTH + j] == nullptr) {
+			if (_board[i * BOARD_LENGTH + j] == nullptr) {
 				res += EMPTY_CELL_CHAR;
 			} else {
-				res += this->_board[i * BOARD_LENGTH + j]->get_type();
+				res += _board[i * BOARD_LENGTH + j]->get_type();
 			}
 		}
 	}
 
-	res += this->_turn + '0';
+	res += _turn + '0';
 	return res;
 }
 
-void Game::init(const char* board) {
-	int i = 0; //y
-	int j = 0; //x
-	std::string loc = "##"; //create std::string with place for x and y (2 char length std::string)
-
-	for (i = 0; i < BOARD_LENGTH; i++) {
-		for (j = 0; j < BOARD_LENGTH; j++) {
-			loc[0] = FIRST_INDEX_VALUE_OF_X + j;
-			loc[1] = FIRST_INDEX_VALUE_OF_Y - i;
-
-			switch (tolower(board[i * BOARD_LENGTH + j])) {
-			case QUEEN:
-				this->_board.push_back((Piece*)new Queen(board[i * BOARD_LENGTH + j], loc));
-				break;
-
-			case KING:
-				this->_board.push_back((Piece*)new King(board[i * BOARD_LENGTH + j], loc));
-
-				if (this->_board[this->_board.size() - 1]->get_owner() == Players::BLACK_PLAYER) {
-					this->_black_king = this->_board[this->_board.size() - 1];
-				} else { //if last added piece (king) owned to the white player
-					this->_white_king = this->_board[this->_board.size() - 1];
-				}
-
-				break;
-
-			case PAWN:
-				this->_board.push_back((Piece*)new Pawn(board[i * BOARD_LENGTH + j], loc));
-				break;
-
-			case ROOK:
-				this->_board.push_back((Piece*)new Rook(board[i * BOARD_LENGTH + j], loc));
-				break;
-
-			case BISHOP:
-				this->_board.push_back((Piece*)new Bishop(board[i * BOARD_LENGTH + j], loc));
-				break;
-
-			case KNIGHT:
-				this->_board.push_back((Piece*)new Knight(board[i * BOARD_LENGTH + j], loc));
-				break;
-
-			case DRAGON:
-				this->_board.push_back((Piece*)new Dragon(board[i * BOARD_LENGTH + j], loc));
-				break;
-
-			case EMPTY_CELL_CHAR:
-				this->_board.push_back(nullptr);
-				break;
-			}
-		}
-	}
-}
-
-ResultOfCommand Game::exec_command(const std::string& command) {
-	int i = 0, j = 0;
-
+CommandResult Game::exec_command(const std::string& command) {
 	Point source = Point(), destination = Point(), middle = Point();
 	std::string src = command.substr(0, 2);
 	std::string dst = command.substr(2, 2);
-	
-	bool is_mate = false; //when eating king piece, not bonus
+
+	bool is_check_mate = false;
 	size_t src_x = src[INDEX_OF_X] - FIRST_INDEX_VALUE_OF_X, src_y = FIRST_INDEX_VALUE_OF_Y - src[INDEX_OF_Y], dst_x = dst[INDEX_OF_X] - FIRST_INDEX_VALUE_OF_X, dst_y = FIRST_INDEX_VALUE_OF_Y - dst[INDEX_OF_Y];
-	Piece* original_piece_in_dest = nullptr;
 
-	if (src_x < 0 || src_y < 0 || dst_x < 0 || dst_y < 0 || src_x >= BOARD_LENGTH || src_y >= BOARD_LENGTH || dst_x >= BOARD_LENGTH || dst_y >= BOARD_LENGTH) {
-		return ResultOfCommand::ILLEGAL_INDEXES;
+	if ((src_x < 0) || (src_y < 0) || (dst_x < 0 || dst_y < 0) ||
+		(src_x >= BOARD_LENGTH) || (src_y >= BOARD_LENGTH) ||
+		(dst_x >= BOARD_LENGTH) || (dst_y >= BOARD_LENGTH))
+	{
+		return CommandResult::ILLEGAL_INDEXES;
 	}
 
-	if (dst == src) {
-		return ResultOfCommand::DEST_SAME_AS_SOURCE;
+	if (dst == src)
+	{
+		return CommandResult::DEST_SAME_AS_SOURCE;
 	}
 
-	if (this->_board[src_y * BOARD_LENGTH + src_x] == nullptr || this->_board[src_y * BOARD_LENGTH + src_x]->get_owner() != this->_turn) {
-		return ResultOfCommand::SOURCE_HASNT_CURRENT_PLAYERS_PIECE;
+	if (_board[src_y * BOARD_LENGTH + src_x] == nullptr || _board[src_y * BOARD_LENGTH + src_x]->get_owner() != _turn)
+	{
+		return CommandResult::SOURCE_HASNT_CURRENT_PLAYERS_PIECE;
 	}
 
-	if (this->_board[dst_y * BOARD_LENGTH + dst_x] != nullptr && this->_board[dst_y * BOARD_LENGTH + dst_x]->get_owner() == this->_turn) {
-		return ResultOfCommand::INVALID_CURRENT_COLOR_IN_DEST;
+	if (_board[dst_y * BOARD_LENGTH + dst_x] != nullptr && _board[dst_y * BOARD_LENGTH + dst_x]->get_owner() == _turn)
+	{
+		return CommandResult::INVALID_CURRENT_COLOR_IN_DEST;
 	}
 
-	if (!this->_board[src_y * BOARD_LENGTH + src_x]->is_affordable(Point{ dst }, this->_board[dst_y * BOARD_LENGTH + dst_x] != nullptr) || this->is_move_interrupted(Point{ src }, Point{ dst })) {
-		return ResultOfCommand::ILLEGAL_MOVEMENT;
+	if (!_board[src_y * BOARD_LENGTH + src_x]->is_reachable(Point{ dst }, _board[dst_y * BOARD_LENGTH + dst_x] != nullptr) || is_move_interrupted(Point{ src }, Point{ dst })) {
+		return CommandResult::ILLEGAL_MOVEMENT;
 	}
 
-	if (this->_board[dst_y * BOARD_LENGTH + dst_x] != nullptr) { //if was there a piece
-		is_mate = tolower(this->_board[dst_y * BOARD_LENGTH + dst_x]->get_type()) == KING; //if eaten piece was king
-		original_piece_in_dest = this->_board[dst_y * BOARD_LENGTH + dst_x]; //piece which will need to be free if movement is legal
+	std::unique_ptr<Piece> original_piece_in_dest;
+
+	if (_board[dst_y * BOARD_LENGTH + dst_x] != nullptr)
+	{
+		is_check_mate = tolower(_board[dst_y * BOARD_LENGTH + dst_x]->get_type()) == KING;
+		original_piece_in_dest.reset(_board[dst_y * BOARD_LENGTH + dst_x].release());
 	}
 
-	this->_board[dst_y * BOARD_LENGTH + dst_x] = this->_board[src_y * BOARD_LENGTH + src_x]; //set new location index point to
-	this->_board[src_y * BOARD_LENGTH + src_x] = nullptr; //set src (which current piece moved from) to null (there isn't any piece there)
-	this->_board[dst_y * BOARD_LENGTH + dst_x]->update_location(dst); //update location of moved piece to it's new placement on the board
+	_board[dst_y * BOARD_LENGTH + dst_x].reset(_board[src_y * BOARD_LENGTH + src_x].release());
+	_board[dst_y * BOARD_LENGTH + dst_x]->update_location(dst);
 
-	for (i = 0; i < BOARD_LENGTH && !is_mate; i++) { //when check mate enemy, it's legal to have a self check
-		for (j = 0; j < BOARD_LENGTH; j++) {
-				/*if there is a piece in current cell*/			/*and it piece is owned to the enemy (other player)*/				/*and it piece can afford the king of current player (who played last turn which called to this method), when it is known that the king exists there, else was mate*/ /*and there isn't any piece which prevent him to eat the king in his turn (no interrupts for moving from it's current point to the king's point)*/
-			if (this->_board[i * BOARD_LENGTH + j] != nullptr && this->_board[i * BOARD_LENGTH + j]->get_owner() != this->_turn && this->_board[i * BOARD_LENGTH + j]->is_affordable(this->_turn == Players::WHITE_PLAYER ? this->_white_king->get_point() : this->_black_king->get_point(), true) && !this->is_move_interrupted(this->_board[i * BOARD_LENGTH + j]->get_point(), this->_turn == Players::WHITE_PLAYER ? this->_white_king->get_point() : this->_black_king->get_point())) {
-				this->_board[dst_y * BOARD_LENGTH + dst_x]->update_location(src);						 //make piece which moved point be it's original value
-				this->_board[src_y * BOARD_LENGTH + src_x] = this->_board[dst_y * BOARD_LENGTH + dst_x]; //return pieces
-				this->_board[dst_y * BOARD_LENGTH + dst_x] = original_piece_in_dest;					 //to their original position
-				return ResultOfCommand::INVALID_SELF_CHESS;
+	for (size_t i = 0; i < BOARD_LENGTH && !is_check_mate; i++)
+	{ //when check mate enemy, it's legal to have a self check
+		for (size_t j = 0; j < BOARD_LENGTH; j++)
+		{
+			if (
+				_board[(i * BOARD_LENGTH) + j] != nullptr &&
+				_board[(i * BOARD_LENGTH) + j]->get_owner() != _turn &&
+				_board[i * BOARD_LENGTH + j]->is_reachable(_turn == Player::WHITE_PLAYER ? _white_king->get_point() : _black_king->get_point(), true) && !is_move_interrupted(_board[i * BOARD_LENGTH + j]->get_point(), _turn == Player::WHITE_PLAYER ? _white_king->get_point() : _black_king->get_point())) {
+				_board[(dst_y * BOARD_LENGTH) + dst_x]->update_location(src);
+				_board[(src_y * BOARD_LENGTH) + src_x].reset(_board[dst_y * BOARD_LENGTH + dst_x].get());
+				_board[(dst_y * BOARD_LENGTH) + dst_x].reset(original_piece_in_dest.release());
+				return CommandResult::INVALID_SELF_CHESS;
 			}
 		}
 	}
-	
+
 	/*If a pawn achived to max place on board, replace him with a dragon*/
-	if ((dst_y == BOARD_LENGTH - 1 || dst_y == 0) && tolower(this->_board[dst_y * BOARD_LENGTH + dst_x]->get_type()) == PAWN) {
-		delete this->_board[dst_y * BOARD_LENGTH + dst_x];
-		this->_board[dst_y * BOARD_LENGTH + dst_x] = (Piece*)new Dragon(this->_turn == Players::WHITE_PLAYER ? toupper(DRAGON) : tolower(DRAGON), dst);
+	if ((dst_y == BOARD_LENGTH - 1 || dst_y == 0) && tolower(_board[dst_y * BOARD_LENGTH + dst_x]->get_type()) == PAWN) {
+		_board[dst_y * BOARD_LENGTH + dst_x].reset(new Dragon(_turn == Player::WHITE_PLAYER ? toupper(DRAGON) : tolower(DRAGON), dst));
 	}
 
-	if (original_piece_in_dest != nullptr) { //if was a piece in original dst point
-		delete original_piece_in_dest;		 //free it
+	if (_turn == Player::WHITE_PLAYER)
+	{
+		_turn = Player::BLACK_PLAYER;
+	}
+	else
+	{
+		_turn = Player::WHITE_PLAYER;
 	}
 
-	if (this->_turn == Players::WHITE_PLAYER) { //change
-		this->_turn = Players::BLACK_PLAYER;	//turn
-	} else { //if this->_turn was Players::BLACK_PLAYER
-		this->_turn = Players::WHITE_PLAYER;
+	if (is_check_mate)
+	{
+		return CommandResult::MATE;
 	}
-
-	//if arrived here, move was valid.
-
-	if (is_mate) {
-		return ResultOfCommand::MATE;
-	} else if (this->is_check()) {
-		return ResultOfCommand::CHESS;
-	} else {
-		return ResultOfCommand::VALID_MOVE;
+	else if (is_check())
+	{
+		return CommandResult::CHESS;
+	}
+	else
+	{
+		return CommandResult::VALID_MOVE;
 	}
 }
 
@@ -171,8 +174,8 @@ void Game::draw() const {
 
 	for (i = 0; i < BOARD_LENGTH; i++) {
 		for (j = 0; j < BOARD_LENGTH; j++) {
-			if (this->_board[i * BOARD_LENGTH + j] != nullptr) {
-				std::cout << " " << this->_board[i * BOARD_LENGTH + j]->get_type();
+			if (_board[i * BOARD_LENGTH + j] != nullptr) {
+				std::cout << " " << _board[i * BOARD_LENGTH + j]->get_type();
 			} else {
 				std::cout << " " << EMPTY_CELL_CHAR;
 			}
@@ -184,27 +187,28 @@ void Game::draw() const {
 	std::cout << std::endl;
 }
 
-bool Game::is_move_interrupted(const Point& src, const Point& dst) const {
+bool Game::is_move_interrupted(const Point& src, const Point& dst) const
+{
 	int i = 0;
 	int j = 0;
 	int src_x = src.get_x(), src_y = src.get_y();
 	std::string mid = "##"; //new string 2 char length
 	Point middle = Point();
 
-	if (this->_board[src_y * BOARD_LENGTH + src_x] == nullptr) {
+	if (_board[src_y * BOARD_LENGTH + src_x] == nullptr) {
 		return true;
 	}
 
 	for (i = 0; i < BOARD_LENGTH; i++) {
 		for (j = 0; j < BOARD_LENGTH; j++) {
-			if (this->_board[i * BOARD_LENGTH + j] != nullptr) { //if there is cell with a piece
+			if (_board[i * BOARD_LENGTH + j] != nullptr) { //if there is cell with a piece
 				mid[INDEX_OF_Y] = FIRST_INDEX_VALUE_OF_Y - i;
 				mid[INDEX_OF_X] = FIRST_INDEX_VALUE_OF_X + j;
 
 				middle.init_point(mid);
 
 				if (middle != src && middle != dst) {
-					switch (tolower(this->_board[src_y * BOARD_LENGTH + src_x]->get_type())) { //if type of src piece need to be checked -> y = ax + b
+					switch (tolower(_board[src_y * BOARD_LENGTH + src_x]->get_type())) { //if type of src piece need to be checked -> y = ax + b
 					case KNIGHT: //knight can skip other pieces
 					case DRAGON: //dragon can also skip other pieces
 					case KING:	 //king can move only one step, so he can't accidentally try skiping other piece while his movement is valid
@@ -228,10 +232,11 @@ bool Game::is_check() const {
 
 	for (i = 0; i < BOARD_LENGTH; i++) {
 		for (j = 0; j < BOARD_LENGTH; j++) {
-			if (this->_board[i * BOARD_LENGTH + j] != nullptr) {
-				if (this->_board[i * BOARD_LENGTH + j]->get_owner() != Players::BLACK_PLAYER && this->_board[i * BOARD_LENGTH + j]->is_affordable(this->_black_king->get_point(), true) && !this->is_move_interrupted(this->_board[i * BOARD_LENGTH + j]->get_point(), this->_black_king->get_point())) {
+			if (_board[i * BOARD_LENGTH + j] != nullptr) {
+				if (_board[i * BOARD_LENGTH + j]->get_owner() != Player::BLACK_PLAYER && _board[i * BOARD_LENGTH + j]->is_reachable(_black_king->get_point(), true) && !is_move_interrupted(_board[i * BOARD_LENGTH + j]->get_point(), _black_king->get_point())) {
 					return true;
-				} else if (this->_board[i * BOARD_LENGTH + j]->get_owner() != Players::WHITE_PLAYER && this->_board[i * BOARD_LENGTH + j]->is_affordable(this->_white_king->get_point(), true) && !this->is_move_interrupted(this->_board[i * BOARD_LENGTH + j]->get_point(), this->_white_king->get_point())) {
+				}
+				else if (_board[i * BOARD_LENGTH + j]->get_owner() != Player::WHITE_PLAYER && _board[i * BOARD_LENGTH + j]->is_reachable(_white_king->get_point(), true) && !is_move_interrupted(_board[i * BOARD_LENGTH + j]->get_point(), _white_king->get_point())) {
 					return true;
 				}
 			}

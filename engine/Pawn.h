@@ -13,5 +13,5 @@ private:
 public:
 	explicit Pawn(const char type, const std::string& location);
 	virtual void update_location(const std::string& new_location) override;
-	virtual bool is_affordable(const Point& new_location, bool isThereAPlayer) const;
+	virtual bool is_reachable(const Point& new_location, bool isThereAPlayer) const;
 };

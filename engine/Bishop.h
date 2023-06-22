@@ -5,5 +5,5 @@ class Bishop : public Piece
 {
 public:
 	explicit Bishop(const char type, const std::string& location);
-	virtual bool is_affordable(const Point& new_location, bool is_there_a_player) const;
+	virtual bool is_reachable(const Point& new_location, bool is_there_a_player) const;
 };
