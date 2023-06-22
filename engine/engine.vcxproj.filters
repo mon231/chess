@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Bishop.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Dragon.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="King.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Knight.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Pawn.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Piece.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Point.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Queen.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Rook.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Bishop.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Dragon.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="King.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Knight.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Pawn.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Piece.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipe.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Queen.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rook.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="chessGraphics.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{a322d3fd-f41d-41b1-ac8b-989045a0b479}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{24166ddc-2931-465c-8b1f-d4d02b49bb43}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
