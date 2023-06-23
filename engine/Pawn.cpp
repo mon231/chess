@@ -16,15 +16,14 @@ bool Pawn::is_reachable(const Point& new_location, bool is_there_a_player) const
 	}
 
 	CHECK_AND_RETURN(!is_there_a_player, false);
+	CHECK_AND_RETURN(new_location.get_x() == _location.get_x(), false);
 
-	if (new_location.get_x() == _location.get_x() &&
-		new_location.get_y() == _location.get_y() + movement_direction) 
+	if (new_location.get_y() == _location.get_y() + movement_direction)
 	{
 		return true;
 	}
 
 	if (_is_first_step &&
-		new_location.get_x() == _location.get_x() &&
 		new_location.get_y() == _location.get_y() + movement_direction * DOUBLE) {
 		return true;
 	}

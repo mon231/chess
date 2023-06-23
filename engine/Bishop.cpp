@@ -5,5 +5,5 @@ Bishop::Bishop(const char type, const Point& location) :
 {}
 
 bool Bishop::is_reachable(const Point& new_location, bool is_there_a_player) const {
-	return new_location.is_diagonalled_to(get_point());
+	return new_location.is_diagonalled_to(_location);
 }

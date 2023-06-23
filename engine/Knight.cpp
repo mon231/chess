@@ -4,12 +4,15 @@ Knight::Knight(const char type, const Point& location) :
 	Piece(type, location)
 {}
 
-bool Knight::is_reachable(const Point& new_location, bool is_there_a_player) const {
-	if ((new_location.get_x() == get_point().get_x() - 2 || new_location.get_x() == get_point().get_x() + 2) && (new_location.get_y() == get_point().get_y() - 1 || new_location.get_y() == get_point().get_y() + 1)) {
+bool Knight::is_reachable(const Point& new_location, bool is_there_a_player) const 
+{
+	if ((new_location.get_delta_x(_location) == 2) && (new_location.get_delta_y(_location) == 1))
+	{
 		return true;
 	}
 
-	if ((new_location.get_y() == get_point().get_y() - 2 || new_location.get_y() == get_point().get_y() + 2) && (new_location.get_x() == get_point().get_x() - 1 || new_location.get_x() == get_point().get_x() + 1)) {
+	if ((new_location.get_delta_x(_location) == 1) && (new_location.get_delta_y(_location) == 2))
+	{
 		return true;
 	}
 
