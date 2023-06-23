@@ -52,6 +52,7 @@ private:
 	bool is_point_on_board(const Point& point) const;
 	bool exists_piece_at_point(const Point& point) const;
 
+	bool is_self_check() const;
 	Point parse_point(const std::string& point_cords) const;
 	std::unique_ptr<Piece>& board_at_point(const Point& point);
 	const std::unique_ptr<Piece>& board_at_point(const Point& point) const;
