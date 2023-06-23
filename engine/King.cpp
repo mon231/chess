@@ -1,4 +1,4 @@
-#include "King.h"
+#include "King.hpp"
 
 King::King(const char type, const Point& location) :
 	Piece(type, location)

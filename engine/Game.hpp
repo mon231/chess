@@ -5,14 +5,14 @@
 #include <string>
 #include <iostream>
 
-#include "Pawn.h"
-#include "King.h"
-#include "Rook.h"
-#include "Piece.h"
-#include "Queen.h"
-#include "Knight.h"
-#include "Bishop.h"
-#include "Dragon.h"
+#include "Pawn.hpp"
+#include "King.hpp"
+#include "Rook.hpp"
+#include "Piece.hpp"
+#include "Queen.hpp"
+#include "Knight.hpp"
+#include "Bishop.hpp"
+#include "Dragon.hpp"
 
 #define BOARD_LENGTH 9
 #define EMPTY_CELL_CHAR '#'

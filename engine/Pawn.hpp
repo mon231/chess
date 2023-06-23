@@ -1,5 +1,5 @@
 #pragma once
-#include "Piece.h"
+#include "Piece.hpp"
 
 #define DOUBLE 2
 #define STEP_FORWARD 1

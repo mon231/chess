@@ -1,5 +1,5 @@
 #pragma once
-#include "Point.h"
+#include "Point.hpp"
 
 enum Player { NOT_ANY_PLAYER = -1, WHITE_PLAYER, BLACK_PLAYER };
 

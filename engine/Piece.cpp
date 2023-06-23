@@ -1,4 +1,4 @@
-#include "Piece.h"
+#include "Piece.hpp"
 
 Piece::Piece(const char type, const Point& location) :
 	_type(type), _location(location)

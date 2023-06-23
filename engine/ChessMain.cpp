@@ -1,5 +1,5 @@
-#include "Pipe.h"
-#include "Game.h"
+#include "Pipe.hpp"
+#include "Game.hpp"
 
 #include <stdlib.h>
 #include <iostream>

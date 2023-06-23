@@ -1,9 +1,9 @@
 #pragma once
-#include "Piece.h"
+#include "Piece.hpp"
 
-class Queen : public Piece
+class Bishop : public Piece
 {
 public:
-	explicit Queen(const char type, const Point& location);
+	explicit Bishop(const char type, const Point& location);
 	virtual bool is_reachable(const Point& new_location, bool is_there_a_player) const;
 };

@@ -1,5 +1,5 @@
-#include "Game.h"
-#include "Macros.h"
+#include "Game.hpp"
+#include "Macros.hpp"
 
 Game::Game(const char* board) :
 	_board(),

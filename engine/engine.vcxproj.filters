@@ -39,43 +39,43 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bishop.h">
+    <ClInclude Include="Bishop.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Dragon.h">
+    <ClInclude Include="Dragon.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
+    <ClInclude Include="Game.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="King.h">
+    <ClInclude Include="King.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Knight.h">
+    <ClInclude Include="Knight.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Pawn.h">
+    <ClInclude Include="Pawn.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Piece.h">
+    <ClInclude Include="Piece.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Pipe.h">
+    <ClInclude Include="Pipe.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Point.h">
+    <ClInclude Include="Point.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Queen.h">
+    <ClInclude Include="Queen.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Rook.h">
+    <ClInclude Include="Rook.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h">
+    <ClInclude Include="stdafx.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Macros.h">
+    <ClInclude Include="Macros.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

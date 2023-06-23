@@ -1,4 +1,4 @@
-#include "Dragon.h"
+#include "Dragon.hpp"
 
 Dragon::Dragon(const char type, const Point& location) :
 	Piece(type, location)

@@ -1,4 +1,4 @@
-#include "Bishop.h"
+#include "Bishop.hpp"
 
 Bishop::Bishop(const char type, const Point& location) :
 	Piece(type, location)

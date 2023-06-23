@@ -1,4 +1,4 @@
-#include "Queen.h"
+#include "Queen.hpp"
 
 Queen::Queen(const char type, const Point& location) :
 	Piece(type, location)

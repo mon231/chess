@@ -1,5 +1,5 @@
 #pragma once
-#include "Piece.h"
+#include "Piece.hpp"
 
 class Dragon : public Piece
 {

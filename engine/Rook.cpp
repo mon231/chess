@@ -1,4 +1,4 @@
-#include "Rook.h"
+#include "Rook.hpp"
 
 Rook::Rook(const char type, const Point& location) :
 	Piece(type, location) 

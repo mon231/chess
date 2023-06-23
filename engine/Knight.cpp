@@ -1,4 +1,4 @@
-#include "Knight.h"
+#include "Knight.hpp"
 
 Knight::Knight(const char type, const Point& location) :
 	Piece(type, location)

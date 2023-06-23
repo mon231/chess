@@ -19,19 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bishop.h" />
-    <ClInclude Include="Dragon.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="King.h" />
-    <ClInclude Include="Knight.h" />
-    <ClInclude Include="Macros.h" />
-    <ClInclude Include="Pawn.h" />
-    <ClInclude Include="Point.h" />
-    <ClInclude Include="Piece.h" />
-    <ClInclude Include="Pipe.h" />
-    <ClInclude Include="Queen.h" />
-    <ClInclude Include="Rook.h" />
-    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Bishop.hpp" />
+    <ClInclude Include="Dragon.hpp" />
+    <ClInclude Include="Game.hpp" />
+    <ClInclude Include="King.hpp" />
+    <ClInclude Include="Knight.hpp" />
+    <ClInclude Include="Macros.hpp" />
+    <ClInclude Include="Pawn.hpp" />
+    <ClInclude Include="Point.hpp" />
+    <ClInclude Include="Piece.hpp" />
+    <ClInclude Include="Pipe.hpp" />
+    <ClInclude Include="Queen.hpp" />
+    <ClInclude Include="Rook.hpp" />
+    <ClInclude Include="stdafx.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bishop.cpp" />

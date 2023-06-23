@@ -1,5 +1,5 @@
-#include "Pawn.h"
-#include "Macros.h"
+#include "Pawn.hpp"
+#include "Macros.hpp"
 
 Pawn::Pawn(const char type, const Point& location) :
 	Piece(type, location), _is_first_step(true)
