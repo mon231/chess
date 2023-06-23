@@ -80,9 +80,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="chessGraphics.exe" />
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="Headers">
       <UniqueIdentifier>{a322d3fd-f41d-41b1-ac8b-989045a0b479}</UniqueIdentifier>
     </Filter>
