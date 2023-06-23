@@ -1,6 +1,6 @@
 #include "Bishop.h"
 
-Bishop::Bishop(const char type, const std::string& location) :
+Bishop::Bishop(const char type, const Point& location) :
 	Piece(type, location)
 {}
 

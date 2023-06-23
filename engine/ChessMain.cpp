@@ -42,7 +42,7 @@ int main()
 		}
 	}
 
-	copy_string_to_char_array(msg_to_graphics, game.parse_string()); //msgToGraphics = first_board_as_string + color_of_first_player -> always white
+	copy_string_to_char_array(msg_to_graphics, game.to_string()); //msgToGraphics = first_board_as_string + color_of_first_player -> always white
 	p.send_message_to_graphics(msg_to_graphics);   // send the board string
 
 	msg_from_graphics = p.get_message_from_graphics(); //get message from graphics

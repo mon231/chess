@@ -24,6 +24,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="King.h" />
     <ClInclude Include="Knight.h" />
+    <ClInclude Include="Macros.h" />
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Piece.h" />
@@ -43,7 +44,7 @@
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Queen.cpp" />
     <ClCompile Include="Rook.cpp" />
-    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="ChessMain.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>

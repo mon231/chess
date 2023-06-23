@@ -31,7 +31,7 @@
     <ClCompile Include="Rook.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="Source.cpp">
+    <ClCompile Include="ChessMain.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
@@ -73,6 +73,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Macros.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

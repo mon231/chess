@@ -1,6 +1,6 @@
 #include "King.h"
 
-King::King(const char type, const std::string& location) :
+King::King(const char type, const Point& location) :
 	Piece(type, location)
 {}
 

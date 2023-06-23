@@ -18,18 +18,25 @@ class Point
 {
 public:
 	explicit Point();
+	explicit Point(size_t x, size_t y);
 	explicit Point(const std::string& location);
 
 	bool is_diagonalled_to(const Point& other) const;
-	bool is_in_same_line_with(const Point& other) const;
+	bool is_in_row_or_column_with(const Point& other) const;
 
+	bool operator==(const Point& other) const;
 	bool operator!=(const Point& other) const;
 
-	int get_x() const;
-	int get_y() const;
+	size_t get_x() const;
+	size_t get_y() const;
+
+	size_t get_delta_x(const Point& other) const;
+	size_t get_delta_y(const Point& other) const;
+
+private:
 	void init_point(const std::string& location);
 
 private:
-	int _x;
-	int _y;
+	size_t _x;
+	size_t _y;
 };

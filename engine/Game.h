@@ -39,9 +39,9 @@ enum CommandResult {
 class Game
 {	
 public:
-	Game(const char* board);
+	explicit Game(const char* board);
+	std::string to_string() const;
 
-	std::string parse_string() const;
 	void draw() const;
 	bool is_check() const;
 	bool is_move_interrupted(const Point& src, const Point& dst) const;
@@ -49,8 +49,19 @@ public:
 	CommandResult exec_command(const std::string& command);
 
 private:
-	std::vector<std::unique_ptr<Piece>> _board;
+	const Piece* get_current_player_king() const;
+	bool is_point_on_board(const Point& point) const;
+	bool exists_piece_at_point(const Point& point) const;
+
+	std::unique_ptr<Piece>& board_at_point(const Point& point);
+	const std::unique_ptr<Piece>& board_at_point(const Point& point) const;
+
+private:
+	static std::unique_ptr<Piece> create_piece(char type, const Point& location);
+
+private:
 	Player _turn;
+	std::vector<std::unique_ptr<Piece>> _board;
 
 	Piece* _white_king;
 	Piece* _black_king;

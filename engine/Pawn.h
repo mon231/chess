@@ -7,11 +7,12 @@
 
 class Pawn : public Piece
 {
+public:
+	explicit Pawn(const char type, const Point& location);
+
+	virtual void update_location(const Point& new_location) override;
+	virtual bool is_reachable(const Point& new_location, bool isThereAPlayer) const;
+
 private:
 	bool _is_first_step;
-
-public:
-	explicit Pawn(const char type, const std::string& location);
-	virtual void update_location(const std::string& new_location) override;
-	virtual bool is_reachable(const Point& new_location, bool isThereAPlayer) const;
 };

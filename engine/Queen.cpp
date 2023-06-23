@@ -1,11 +1,11 @@
 #include "Queen.h"
 
-Queen::Queen(const char type, const std::string& location) :
+Queen::Queen(const char type, const Point& location) :
 	Piece(type, location)
 {}
 
 bool Queen::is_reachable(const Point& new_location, bool is_there_a_player) const {
-	if (new_location.is_in_same_line_with(get_point())) {
+	if (new_location.is_in_row_or_column_with(get_point())) {
 		return true;
 	}
 

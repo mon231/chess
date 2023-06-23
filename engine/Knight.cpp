@@ -1,6 +1,6 @@
 #include "Knight.h"
 
-Knight::Knight(const char type, const std::string& location) :
+Knight::Knight(const char type, const Point& location) :
 	Piece(type, location)
 {}
 
