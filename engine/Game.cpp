@@ -1,16 +1,17 @@
 #include "Game.hpp"
 #include "Macros.hpp"
 
-Game::Game(const char* board) :
+Game::Game(const char* board, size_t board_length) :
 	_board(),
+	_board_length(board_length),
 	_turn(Player::WHITE_PLAYER),
 	_white_king(),
 	_black_king()
 {
-	for (size_t y_index = 0; y_index < BOARD_LENGTH; ++y_index) {
-		for (size_t x_index = 0; x_index < BOARD_LENGTH; ++x_index) {
+	for (size_t y_index = 0; y_index < _board_length; ++y_index) {
+		for (size_t x_index = 0; x_index < _board_length; ++x_index) {
 			Point current_position{ x_index, y_index };
-			const char piece_type = board[(y_index * BOARD_LENGTH) + x_index];
+			const char piece_type = board[(y_index * _board_length) + x_index];
 
 			_board.emplace_back(create_piece(piece_type, current_position));
 
@@ -34,9 +35,9 @@ Game::Game(const char* board) :
 std::string Game::to_string() const {
 	std::string res = "";
 
-	for (size_t y_index = 0; y_index < BOARD_LENGTH; y_index++)
+	for (size_t y_index = 0; y_index < _board_length; y_index++)
 	{
-		for (size_t x_index = 0; x_index < BOARD_LENGTH; x_index++)
+		for (size_t x_index = 0; x_index < _board_length; x_index++)
 		{
 			Point current_point{ x_index, y_index };
 
@@ -56,29 +57,28 @@ std::string Game::to_string() const {
 }
 
 CommandResult Game::exec_command(const std::string& command) {
-	Point source{ command.substr(0, 2) };
-	Point destination{ command.substr(2, 2) }; 
+	Point source = parse_point(command.substr(0, 2));
+	Point destination = parse_point(command.substr(2, 2));
 
 	CHECK_AND_RETURN(
-		is_point_on_board(source) && 
+		is_point_on_board(source) &&
 		is_point_on_board(destination),
 		CommandResult::ILLEGAL_INDEXES);
-	
+
 	CHECK_AND_RETURN(
-		source != destination, 
+		source != destination,
 		CommandResult::DEST_SAME_AS_SOURCE);
 
 	CHECK_AND_RETURN(
 		exists_piece_at_point(source) &&
-		board_at_point(source)->get_owner() == _turn, 
+		board_at_point(source)->get_owner() == _turn,
 		CommandResult::SOURCE_HASNT_CURRENT_PLAYERS_PIECE);
 
 	CHECK_AND_RETURN(
 		!exists_piece_at_point(destination) ||
 		board_at_point(destination)->get_owner() != _turn,
 		CommandResult::INVALID_CURRENT_COLOR_IN_DEST);
-	
-	// TODO: bugfix
+
 	CHECK_AND_RETURN(
 		board_at_point(source)->is_reachable(destination, exists_piece_at_point(destination)) &&
 		!is_move_interrupted(source, destination),
@@ -96,16 +96,16 @@ CommandResult Game::exec_command(const std::string& command) {
 	board_at_point(destination).reset(board_at_point(source).release());
 	board_at_point(destination)->update_location(destination);
 
-	for (size_t i = 0; i < BOARD_LENGTH && !is_check_mate; i++)
+	for (size_t i = 0; i < _board_length && !is_check_mate; i++)
 	{ //when check mate enemy, it's legal to have a self check
-		for (size_t j = 0; j < BOARD_LENGTH; j++)
+		for (size_t j = 0; j < _board_length; j++)
 		{
 			if (
 
-				(_board[(i * BOARD_LENGTH) + j] != nullptr) &&
-				(_board[(i * BOARD_LENGTH) + j]->get_owner() != _turn) &&
-				(_board[(i * BOARD_LENGTH) + j]->is_reachable(get_current_player_king()->get_point(), true)) &&
-				(!is_move_interrupted(_board[i * BOARD_LENGTH + j]->get_point(), get_current_player_king()->get_point())))
+				(_board[(i * _board_length) + j] != nullptr) &&
+				(_board[(i * _board_length) + j]->get_owner() != _turn) &&
+				(_board[(i * _board_length) + j]->is_reachable(get_current_player_king()->get_point(), true)) &&
+				(!is_move_interrupted(_board[i * _board_length + j]->get_point(), get_current_player_king()->get_point())))
 			{
 				board_at_point(source).reset(board_at_point(destination).release());
 				board_at_point(source)->update_location(source);
@@ -118,7 +118,7 @@ CommandResult Game::exec_command(const std::string& command) {
 
 	/*If a pawn achived to max place on board, replace him with a dragon*/
 	if ((tolower(board_at_point(destination)->get_type()) == PAWN) &&
-		((destination.get_y() == BOARD_LENGTH - 1) || (destination.get_y() == 0))) 
+		((destination.get_y() == _board_length - 1) || (destination.get_y() == 0)))
 	{
 		board_at_point(destination).reset(new Dragon(_turn == Player::WHITE_PLAYER ? toupper(DRAGON) : tolower(DRAGON), destination));
 	}
@@ -160,7 +160,7 @@ bool Game::is_point_on_board(const Point& point) const
 {
 	return 
 		(point.get_x() >= 0) && (point.get_y() >= 0) &&
-		(point.get_x() < BOARD_LENGTH) && (point.get_y() < BOARD_LENGTH);
+		(point.get_x() < _board_length) && (point.get_y() < _board_length);
 }
 
 bool Game::exists_piece_at_point(const Point& point) const
@@ -168,24 +168,39 @@ bool Game::exists_piece_at_point(const Point& point) const
 	return board_at_point(point) != nullptr;
 }
 
+Point Game::parse_point(const std::string& point_cords) const
+{
+	static constexpr size_t INDEX_OF_X = 0;
+	static constexpr char FIRST_INDEX_VALUE_OF_X = 'a';
+
+	const size_t x = point_cords[INDEX_OF_X] - FIRST_INDEX_VALUE_OF_X;
+
+	static constexpr size_t INDEX_OF_Y = 1;
+	static constexpr char LAST_INDEX_VALUE_OF_Y = '0';
+
+	const size_t y = (LAST_INDEX_VALUE_OF_Y + _board_length) - point_cords[INDEX_OF_Y];
+
+	return Point{ x, y };
+}
+
 std::unique_ptr<Piece>& Game::board_at_point(const Point& point)
 {
-	return _board[(point.get_y() * BOARD_LENGTH) + point.get_x()];
+	return _board[(point.get_y() * _board_length) + point.get_x()];
 }
 
 const std::unique_ptr<Piece>& Game::board_at_point(const Point& point) const
 {
-	return _board[(point.get_y() * BOARD_LENGTH) + point.get_x()];
+	return _board[(point.get_y() * _board_length) + point.get_x()];
 }
 
 void Game::draw() const {
 	int i = 0;
 	int j = 0;
 
-	for (i = 0; i < BOARD_LENGTH; i++) {
-		for (j = 0; j < BOARD_LENGTH; j++) {
-			if (_board[i * BOARD_LENGTH + j] != nullptr) {
-				std::cout << " " << _board[i * BOARD_LENGTH + j]->get_type();
+	for (i = 0; i < _board_length; i++) {
+		for (j = 0; j < _board_length; j++) {
+			if (_board[i * _board_length + j] != nullptr) {
+				std::cout << " " << _board[i * _board_length + j]->get_type();
 			} else {
 				std::cout << " " << EMPTY_CELL_CHAR;
 			}
@@ -208,20 +223,19 @@ bool Game::is_move_interrupted(const Point& src, const Point& dst) const
 		(src_piece_type != DRAGON),
 		false);
 
-	for (size_t y_index = 0; y_index < BOARD_LENGTH; y_index++)
+	for (size_t y_index = 0; y_index < _board_length; y_index++)
 	{
-		for (size_t x_index = 0; x_index < BOARD_LENGTH; x_index++)
+		for (size_t x_index = 0; x_index < _board_length; x_index++)
 		{
 			Point current_point{ x_index, y_index };
-			if ((current_point == src) || (current_point == dst))
+			if ((current_point == src) ||
+				(current_point == dst) ||
+				!exists_piece_at_point(current_point))
 			{
 				continue;
 			}
 
-			CHECK_AND_RETURN(
-				exists_piece_at_point(current_point) &&
-				IS_BETWEEN(current_point, src, dst),
-				true);
+			CHECK_AND_RETURN(!current_point.is_on_line_between(src, dst), true);
 		}
 	}
 
@@ -231,17 +245,17 @@ bool Game::is_move_interrupted(const Point& src, const Point& dst) const
 bool Game::is_check() const {
 	int i = 0, j = 0;
 
-	for (i = 0; i < BOARD_LENGTH; i++)  
+	for (i = 0; i < _board_length; i++)  
 	{
-		for (j = 0; j < BOARD_LENGTH; j++) 
+		for (j = 0; j < _board_length; j++) 
 		{
-			if (_board[i * BOARD_LENGTH + j] != nullptr) 
+			if (_board[i * _board_length + j] != nullptr) 
 			{
-				if (_board[i * BOARD_LENGTH + j]->get_owner() != Player::BLACK_PLAYER && _board[i * BOARD_LENGTH + j]->is_reachable(_black_king->get_point(), true) && !is_move_interrupted(_board[i * BOARD_LENGTH + j]->get_point(), _black_king->get_point())) 
+				if (_board[i * _board_length + j]->get_owner() != Player::BLACK_PLAYER && _board[i * _board_length + j]->is_reachable(_black_king->get_point(), true) && !is_move_interrupted(_board[i * _board_length + j]->get_point(), _black_king->get_point())) 
 				{
 					return true;
 				}
-				else if (_board[i * BOARD_LENGTH + j]->get_owner() != Player::WHITE_PLAYER && _board[i * BOARD_LENGTH + j]->is_reachable(_white_king->get_point(), true) && !is_move_interrupted(_board[i * BOARD_LENGTH + j]->get_point(), _white_king->get_point())) 
+				else if (_board[i * _board_length + j]->get_owner() != Player::WHITE_PLAYER && _board[i * _board_length + j]->is_reachable(_white_king->get_point(), true) && !is_move_interrupted(_board[i * _board_length + j]->get_point(), _white_king->get_point())) 
 				{
 					return true;
 				}

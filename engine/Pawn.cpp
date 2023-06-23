@@ -24,7 +24,7 @@ bool Pawn::is_reachable(const Point& new_location, bool is_there_a_player) const
 	}
 
 	if (_is_first_step &&
-		new_location.get_y() == _location.get_y() + movement_direction * DOUBLE) {
+		new_location.get_y() == _location.get_y() + (movement_direction * DOUBLE)) {
 		return true;
 	}
 

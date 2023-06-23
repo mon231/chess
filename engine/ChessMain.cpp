@@ -18,8 +18,9 @@ void copy_string_to_char_array(char* arr, std::string str) {
 
 int main()
 {
-	Pipe p = Pipe();
-	Game game = Game(BOARD_FIRST_STATE);
+
+	static constexpr size_t BOARD_LENGTH = 9;
+	Game game = Game(BOARD_FIRST_STATE, BOARD_LENGTH);
 
 	std::string ans = "";
 	std::string msg_from_graphics = "";
@@ -28,6 +29,7 @@ int main()
 	system("start chessGraphics.exe");
 	Sleep(2000);
 
+	Pipe p = Pipe();
 	while (!p.connect()) {
 		std::cout << "Can't connect to graphics." << std::endl;
 		std::cout << "If you wish to try again enter 0, else enter any other key: ";

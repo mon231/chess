@@ -14,7 +14,6 @@
 #include "Bishop.hpp"
 #include "Dragon.hpp"
 
-#define BOARD_LENGTH 9
 #define EMPTY_CELL_CHAR '#'
 #define QUEEN 'q'
 #define KING 'k'
@@ -39,7 +38,7 @@ enum CommandResult {
 class Game
 {	
 public:
-	explicit Game(const char* board);
+	explicit Game(const char* board, size_t board_length);
 	std::string to_string() const;
 
 	void draw() const;
@@ -53,14 +52,16 @@ private:
 	bool is_point_on_board(const Point& point) const;
 	bool exists_piece_at_point(const Point& point) const;
 
+	Point parse_point(const std::string& point_cords) const;
 	std::unique_ptr<Piece>& board_at_point(const Point& point);
 	const std::unique_ptr<Piece>& board_at_point(const Point& point) const;
 
 private:
-	static std::unique_ptr<Piece> create_piece(char type, const Point& location);
+	static std::unique_ptr<Piece> create_piece(char type, const Point& location);	
 
 private:
 	Player _turn;
+	const size_t _board_length;
 	std::vector<std::unique_ptr<Piece>> _board;
 
 	Piece* _white_king;
