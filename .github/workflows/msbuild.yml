@@ -38,6 +38,6 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/v')
       uses: softprops/action-gh-release@v1
       with:
-          files: C:\Build\*
+          files: x64\Release\
       env:
           GITHUB_TOKEN: ${{ github.token }}
