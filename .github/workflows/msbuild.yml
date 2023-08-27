@@ -1,5 +1,8 @@
 name: MSBuild
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
