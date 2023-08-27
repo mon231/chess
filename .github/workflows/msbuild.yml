@@ -50,4 +50,4 @@ jobs:
 
       with:
         files: |
-          ${{ steps.upload-artifact.outputs.artifactPath }}
+          .\x64\Release\engine.exe
