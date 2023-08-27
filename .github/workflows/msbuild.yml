@@ -33,3 +33,10 @@ jobs:
       with:
         name: release-build
         path: C:\Build\
+
+    - name: Release with Notes
+      uses: softprops/action-gh-release@v1
+      with:
+          files: C:\Build\*
+      env:
+          GITHUB_TOKEN: ${{ github.token }}
