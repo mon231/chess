@@ -42,7 +42,9 @@ jobs:
         path: x64\Release\
 
     - name: Release with Notes
-      if: startsWith(github.ref, 'refs/tags/v')
+      if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
-        files: x64\Release\*
+        files: |
+          x64\Release\engine.exe
+          x64\Release\chessGraphics.exe
