@@ -1,6 +1,6 @@
 name: MSBuild
 
-on: [push,  pull_request, release]
+on: [push,  pull_request]
 
 env:
   SOLUTION_FILE_PATH: ChessGame.sln
@@ -34,9 +34,10 @@ jobs:
         name: release-build
         path: x64\Release\
 
-    # - name: Release with Notes
-    #   uses: softprops/action-gh-release@v1
-    #   with:
-    #       files: C:\Build\*
-    #   env:
-    #       GITHUB_TOKEN: ${{ github.token }}
+    - name: Release with Notes
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: softprops/action-gh-release@v1
+      with:
+          files: C:\Build\*
+      env:
+          GITHUB_TOKEN: ${{ github.token }}
