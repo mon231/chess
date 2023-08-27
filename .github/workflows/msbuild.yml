@@ -1,6 +1,15 @@
 name: MSBuild
 
-on: [push,  pull_request, create]
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    types:
+      - closed
+  create:
+    tags:
+      - '*'
 
 env:
   SOLUTION_FILE_PATH: ChessGame.sln
