@@ -27,7 +27,7 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
 
-    - name: Upload a Build Artifact
+    - name: Upload build artifacts
       uses: actions/upload-artifact@v3.1.2
 
       with:
@@ -50,7 +50,7 @@ jobs:
         path: .
 
     - name: Temp research list files
-      run: tree .
+      run: dir /s /b
 
     # - name: Release and upload artifacts
     #   uses: softprops/action-gh-release@v1
