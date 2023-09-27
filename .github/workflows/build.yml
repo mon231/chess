@@ -50,7 +50,7 @@ jobs:
         path: .
 
     - name: Temp research list files
-      run: dir /s /b
+      run: Get-ChildItem -Recurse
 
     # - name: Release and upload artifacts
     #   uses: softprops/action-gh-release@v1
