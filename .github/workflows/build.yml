@@ -36,7 +36,7 @@ jobs:
 
   publish-release:
     runs-on: windows-latest
-    if: startsWith(github.ref, 'refs/tags/')
+    # if: startsWith(github.ref, 'refs/tags/')
 
     needs:
       - build
@@ -52,9 +52,9 @@ jobs:
     - name: Temp research list files
       run: tree .
 
-    - name: Release and upload artifacts
-      uses: softprops/action-gh-release@v1
+    # - name: Release and upload artifacts
+    #   uses: softprops/action-gh-release@v1
 
-      with:
-        files: |
-          engine.exe
+    #   with:
+    #     files: |
+    #       engine.exe
